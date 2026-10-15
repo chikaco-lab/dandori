@@ -1,0 +1,539 @@
+<!doctype html><html lang="ja"><head><meta charset=utf8><meta name="description" content="タスク管理が苦手な人のための、スマホで使える段取り帳。思いついたら放り込むだけ、今日やるのは3つだけ。"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>段取り帳</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Zen+Maru+Gothic:wght@500;700&display=swap">
+<style>
+/* Layout: one-column phone notebook, bottom tab bar, three pages (いま / 切り分け / ねぎらい) */
+:root{
+  --bg:#EEF1F5; --paper:#FFFFFF; --ink:#1C2533; --sub:#5B6576; --line:#D6DCE5;
+  --accent:#3243A6; --accent-soft:#E3E7FA; --feel:#B23E6E; --feel-soft:#F8E4EC; --ok:#2F7A55; --ok-soft:#E1F1E8;
+  --display:"Zen Maru Gothic","Hiragino Maru Gothic ProN",system-ui,sans-serif;
+  --body:"Zen Kaku Gothic New","Hiragino Sans",system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#12161D; --paper:#1B212B; --ink:#E7EBF2; --sub:#9AA4B5; --line:#2D3542;
+  --accent:#8F9DF5; --accent-soft:#252C4A; --feel:#EE8DB4; --feel-soft:#3A2230; --ok:#7CCBA2; --ok-soft:#1D3328; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12161D; --paper:#1B212B; --ink:#E7EBF2; --sub:#9AA4B5; --line:#2D3542;
+  --accent:#8F9DF5; --accent-soft:#252C4A; --feel:#EE8DB4; --feel-soft:#3A2230; --ok:#7CCBA2; --ok-soft:#1D3328; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.6}
+.wrap{max-width:560px;margin:0 auto;padding-inline:16px;padding-block:14px 110px;display:flex;flex-direction:column;gap:18px}
+header{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+h1{font-family:var(--display);font-size:20px;margin:0;letter-spacing:.02em}
+.date{color:var(--sub);font-size:13px;font-variant-numeric:tabular-nums}
+h2{font-family:var(--display);font-size:16px;margin:0;display:flex;align-items:baseline;justify-content:space-between;gap:8px;text-wrap:balance}
+h2 small{font-family:var(--body);font-weight:400;color:var(--sub);font-size:12px}
+section{display:flex;flex-direction:column;gap:10px}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.hint{color:var(--sub);font-size:13px;margin:0}
+input[type=text],textarea{width:100%;font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+textarea{min-height:64px;resize:vertical}
+input:focus-visible,textarea:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button{font:inherit;cursor:pointer;border:none;border-radius:10px}
+.btn{background:var(--accent);color:var(--paper);padding:10px 14px;font-weight:700}
+.btn.ghost{background:var(--accent-soft);color:var(--accent)}
+.row{display:flex;gap:8px;align-items:center}
+.row > input{flex:1;min-width:0}
+/* tasks */
+ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.task{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.task:last-child{border-bottom:none}
+.check{flex:none;width:24px;height:24px;border-radius:50%;border:2px solid var(--accent);background:transparent;padding:0;margin-top:1px}
+.task.done .check{background:var(--ok);border-color:var(--ok)}
+.task .t{flex:1;min-width:0;word-break:break-word}
+.task.done .t{color:var(--sub);text-decoration:line-through}
+.age{font-size:11px;color:var(--sub);display:block}
+.age.old{color:var(--feel);font-weight:700}
+.mini{background:transparent;color:var(--sub);font-size:12px;padding:4px 6px;flex:none}
+.mini.pick{color:var(--accent);background:var(--accent-soft);font-weight:700;padding:7px 12px;border-radius:999px}
+.mini.undo{color:var(--accent);font-weight:700}
+.more summary{cursor:pointer;color:var(--accent);font-size:13px}
+.qty{display:flex;align-items:center;gap:4px;flex:none}
+.qty button{width:30px;height:30px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-weight:700;padding:0}
+.qty b{min-width:2.4em;text-align:center;font-variant-numeric:tabular-nums}
+.buy-actions{display:flex;justify-content:flex-end;gap:6px;flex-wrap:wrap}
+.buy{flex-direction:column;gap:6px}
+.buy .top{display:flex;align-items:flex-start;gap:10px;width:100%}
+.mini.est{color:var(--ok);background:var(--ok-soft);font-weight:700;padding:7px 12px;border-radius:999px}
+.empty{color:var(--sub);font-size:13px;padding:6px 0}
+.count{font-family:var(--display);color:var(--accent);font-size:13px}
+.stale{background:var(--feel-soft);color:var(--feel);border-radius:10px;padding:10px 12px;font-size:13px}
+/* separation */
+.step{display:flex;flex-direction:column;gap:6px}
+.step label{font-weight:700;font-size:14px}
+.step .q{font-size:12px;color:var(--sub)}
+.tag-fact{color:var(--accent)} .tag-feel{color:var(--feel)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{background:var(--bg);border:1px solid var(--line);color:var(--ink);padding:6px 10px;font-size:13px;border-radius:999px}
+.chip.on{background:var(--feel-soft);border-color:var(--feel);color:var(--feel);font-weight:700}
+input[type=range]{width:100%;accent-color:var(--feel)}
+.lvl{font-variant-numeric:tabular-nums;font-weight:700;color:var(--feel)}
+.warn{font-size:12px;color:var(--feel);margin:0}
+.log{border-top:1px solid var(--line);padding-top:10px;display:grid;grid-template-columns:auto 1fr;gap:4px 10px;font-size:13px}
+.log:first-child{border-top:none;padding-top:0}
+.log dt{color:var(--sub);font-size:12px}.log dd{margin:0;min-width:0;word-break:break-word}
+.log .meta{grid-column:1/-1;display:flex;justify-content:space-between;color:var(--sub);font-size:12px}
+.badge{font-size:11px;background:var(--accent-soft);color:var(--accent);border-radius:6px;padding:1px 6px}
+.drop{font-variant-numeric:tabular-nums}
+/* wins */
+.win{display:flex;gap:10px;font-size:14px;padding:6px 0;border-bottom:1px dashed var(--line)}
+.win:last-child{border-bottom:none}
+.win time{color:var(--sub);font-size:12px;flex:none;font-variant-numeric:tabular-nums;padding-top:2px}
+.streak{font-family:var(--display);font-size:28px;color:var(--ok);font-variant-numeric:tabular-nums;line-height:1}
+/* tab bar */
+nav{position:fixed;left:0;right:0;bottom:0;background:var(--paper);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(2,1fr);padding-bottom:env(safe-area-inset-bottom,0px)}
+nav button{background:transparent;color:var(--sub);padding:12px 4px 10px;font-size:13px;border-radius:0;display:flex;flex-direction:column;align-items:center;gap:2px}
+nav button b{font-family:var(--display);font-size:15px}
+nav button[aria-selected=true]{color:var(--accent)}
+nav button[aria-selected=true] b{border-bottom:2px solid var(--accent)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(76px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:999px;font-size:13px;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.show{opacity:1}
+.toast{display:flex;align-items:center;gap:12px;white-space:nowrap}
+.toast.act{pointer-events:auto}
+.toast{z-index:60}
+.cele{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding-inline:16px;background:color-mix(in srgb,var(--ink) 40%,transparent)}
+.cele canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.cele-card{position:relative;background:var(--paper);color:var(--ink);border-radius:22px;padding:24px 20px;width:100%;max-width:340px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px;box-shadow:0 20px 50px color-mix(in srgb,var(--ink) 30%,transparent);animation:pop .6s cubic-bezier(.2,1.6,.4,1) both}
+@keyframes pop{from{transform:scale(.5) rotate(-6deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+.hanamaru path{fill:none;stroke:var(--feel);stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:var(--len,2000);stroke-dashoffset:var(--len,2000);animation:draw 1.2s .25s ease-out forwards}
+@keyframes shake{0%,100%{translate:0 0}20%{translate:-7px 3px}40%{translate:6px -4px}60%{translate:-4px 2px}80%{translate:3px -1px}}
+.flash{position:absolute;inset:0;background:#FFFFFF;opacity:0;pointer-events:none}
+.flash.go{animation:flash .4s ease-out}
+@keyframes flash{0%{opacity:.8}100%{opacity:0}}
+@keyframes draw{to{stroke-dashoffset:0}}
+.cele-big{font-family:var(--display);font-size:30px;font-weight:700;color:var(--feel);line-height:1.3;text-wrap:balance}
+.cele-msg{font-weight:700;font-size:17px;margin:0;text-wrap:balance}
+.cele-theme{font-size:12px;color:var(--sub);letter-spacing:.04em;background:var(--bg);border-radius:999px;padding:2px 10px}
+.cele-sub{color:var(--sub);font-size:14px;margin:0 0 6px}
+@media (prefers-reduced-motion:reduce){.cele-card{animation:none}.flash.go{animation:none}.hanamaru path{animation:none;stroke-dashoffset:0}}
+.toast button{background:transparent;color:var(--bg);font-weight:700;text-decoration:underline;padding:4px 2px}
+.sync{font-size:11px;color:var(--sub)}
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>段取り帳</h1>
+    <span class="date" id="today"></span>
+  </header>
+
+  <!-- PAGE 1: いま -->
+  <div id="p-now" class="page">
+    <section>
+      <h2>思いついたら、ここへポイ<small>考えずに入れるだけ</small></h2>
+      <form class="row" id="f-inbox">
+        <input type="text" id="in-inbox" placeholder="例：歯医者の予約をとる" autocomplete="off">
+        <button class="btn" type="submit">入れる</button>
+      </form>
+    </section>
+
+    <section class="panel" style="margin-top:18px">
+      <h2><span>今日やる<span id="lim-h">3</span>つ</span><span class="count" id="today-count"></span></h2>
+      <p class="hint" id="today-hint"></p>
+      <ul id="today-list"></ul>
+      <details class="more" id="lim-set">
+        <summary>今日やる数を変える</summary>
+        <div class="row" style="padding-top:8px"><span class="hint" style="flex:1">1日に選べる数</span>
+          <div class="qty"><button type="button" id="l-minus" aria-label="1つ減らす">−</button><b id="l-n">3</b><button type="button" id="l-plus" aria-label="1つ増やす">＋</button></div></div>
+      </details>
+    </section>
+
+    <section class="panel" id="done-wrap" style="margin-top:18px" hidden>
+      <h2>最近終えたこと<small>まちがえたら「戻す」</small></h2>
+      <ul id="done-list"></ul>
+    </section>
+
+    <section style="margin-top:18px">
+      <h2>ポイ箱<small id="inbox-n"></small></h2>
+      <div class="stale" id="stale" hidden></div>
+      <div class="panel"><ul id="inbox-list"></ul></div>
+    </section>
+  </div>
+
+  <!-- PAGE 3: ねぎらい -->
+  <div id="p-win" class="page" hidden>
+    <section class="panel">
+      <h2>今日の自分をねぎらう<small>寝る前に1行</small></h2>
+      <p class="hint">人からの「すごいね」を待たなくていいように、自分で記録を残します。小さいことほど書く価値があります。</p>
+      <form class="row" id="f-win">
+        <input type="text" id="in-win" placeholder="例：疲れていたけど、洗濯物をたたんだ" autocomplete="off">
+        <button class="btn" type="submit">残す</button>
+      </form>
+    </section>
+
+    <section class="panel" style="margin-top:18px">
+      <h2>積み上げ</h2>
+      <div class="row" style="gap:20px;flex-wrap:wrap">
+        <div><div class="streak" id="st-done">0</div><span class="hint">終えたタスク</span></div>
+      </div>
+    </section>
+
+    <section style="margin-top:18px">
+      <h2>できたことの記録<small>自分で書いたねぎらい</small></h2>
+      <div class="panel" id="win-list"></div>
+    </section>
+
+    <section style="margin-top:18px">
+      <h2>終えたタスク<small>ポイ箱から自動で記録</small></h2>
+      <div class="panel" id="done-log"></div>
+    </section>
+    <section class="panel" style="margin-top:18px">
+      <h2>記録のバックアップ<small id="bk-last"></small></h2>
+      <p class="hint">記録はこのスマホ(ブラウザ)の中だけに保存されています。ときどき「書き出す」でファイルに保存しておくと、消えてしまったときや機種変更のときに「読み込む」で元に戻せます。</p>
+      <p class="stale" id="bk-warn" hidden></p>
+      <div class="row">
+        <button class="btn" type="button" id="bk-out" style="flex:1">書き出す</button>
+        <button class="btn ghost" type="button" id="bk-in" style="flex:1">読み込む</button>
+        <input type="file" id="bk-file" accept=".json,application/json" hidden>
+      </div>
+    </section>
+    <p class="sync">記録はこの端末のブラウザの中だけに保存されます。ほかの人には見えません。<span id="persist"></span></p>
+  </div>
+</div>
+
+<nav role="tablist">
+  <button role="tab" aria-selected="true" data-p="p-now"><b>いま</b>やること</button>
+  <button role="tab" aria-selected="false" data-p="p-win"><b>ねぎらい</b>積み上げ</button>
+</nav>
+<div class="toast" id="toast"></div>
+<div class="cele" id="cele" hidden>
+  <canvas id="confetti" aria-hidden="true"></canvas>
+  <div class="cele-card" role="dialog" aria-modal="true" aria-labelledby="cele-big">
+    <span class="cele-theme" id="cele-theme"></span>
+    <div class="hanamaru" id="hanamaru"><svg viewBox="0 0 120 120" width="120" height="120" aria-hidden="true"><path id="hm-path"></path></svg></div>
+    <div class="cele-big" id="cele-big"></div>
+    <p class="cele-msg" id="cele-msg"></p>
+    <p class="cele-sub" id="cele-sub"></p>
+    <button class="btn" type="button" id="cele-close">ありがとう</button>
+  </div>
+</div>
+
+<script>
+(function(){
+const LSK="dandori-public-v1";
+const $=id=>document.getElementById(id);
+const pad=n=>String(n).padStart(2,"0");
+const dkey=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const todayKey=()=>dkey(new Date());
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const daysAgo=t=>Math.floor((new Date(todayKey())-new Date(dkey(new Date(t))))/864e5);
+const md=k=>{const p=k.split("-");return (+p[1])+"/"+(+p[2]);};
+
+let S={tasks:[],wins:[],limit:3,fxBag:[],fxLast:"",prBag:[],backupAt:0};
+
+function lsRead(){try{const v=localStorage.getItem(LSK);return v?JSON.parse(v):null}catch(e){return null}}
+function lsWrite(){try{localStorage.setItem(LSK,JSON.stringify(S))}catch(e){}}
+function norm(o){o=o||{};return {tasks:Array.isArray(o.tasks)?o.tasks:[],wins:Array.isArray(o.wins)?o.wins:[],limit:Math.min(10,Math.max(1,+o.limit||3)),fxBag:o.fxBag||[],fxLast:o.fxLast||"",prBag:o.prBag||[],backupAt:+o.backupAt||0};}
+
+function save(){lsWrite();}
+function toast(m,undo){
+  const t=$("toast");t.innerHTML="";
+  const s=document.createElement("span");s.textContent=m;t.appendChild(s);
+  if(undo){const b=document.createElement("button");b.type="button";b.textContent="元に戻す";b.addEventListener("click",()=>{undo();t.classList.remove("show","act");});t.appendChild(b);}
+  t.classList.toggle("act",!!undo);t.classList.add("show");
+  clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove("show","act"),undo?5000:1600);
+}
+
+/* ---------- いま ---------- */
+function renderNow(){
+  const d=new Date();
+  $("today").textContent=(d.getMonth()+1)+"月"+d.getDate()+"日（"+"日月火水木金土"[d.getDay()]+"）";
+
+  const open=S.tasks.filter(t=>!t.done||(t.doneAt&&dkey(new Date(t.doneAt))===todayKey()));
+  const today=open.filter(t=>t.today&&t.todayKey===todayKey());
+  const box=open.filter(t=>!(t.today&&t.todayKey===todayKey())&&!t.done);
+  const L=S.limit;
+  $("lim-h").textContent=L;$("l-n").textContent=L;
+  $("today-count").textContent=today.length+" / "+L;
+  $("today-hint").textContent=`下の箱から「今日やる」を${L}つまで選びます。${L+1}つ目は選べません。`;
+  $("today-list").innerHTML=today.length?today.map(t=>taskLi(t,true)).join(""):'<li class="empty">まだ選んでいません。</li>';
+  $("inbox-n").textContent=box.length+"件";
+  $("inbox-list").innerHTML=box.length?box.map(t=>taskLi(t,false,today.length>=S.limit)).join(""):'<li class="empty">空っぽです。思いついたら上に入れましょう。</li>';
+  const recent=S.tasks.filter(t=>t.done&&t.doneAt&&daysAgo(t.doneAt)<=7&&!(t.today&&t.todayKey===todayKey()));
+  $("done-wrap").hidden=!recent.length;
+  $("done-list").innerHTML=recent.map(t=>`<li class="task done"><div class="t">${esc(t.text)}<span class="age">${daysAgo(t.doneAt)===0?"今日":daysAgo(t.doneAt)+"日前"}に終えた</span></div><button class="mini undo" data-act="undo" data-id="${t.id}">戻す</button></li>`).join("");
+  const old=box.filter(t=>daysAgo(t.created)>=7).length;
+  const st=$("stale");
+  if(old){st.hidden=false;st.textContent=`1週間以上たったものが${old}件あります。「今日やる」か「手放す」か、どちらかに決めると頭が軽くなります。`;}
+  else st.hidden=true;
+}
+function taskLi(t,isToday,full){
+  const a=daysAgo(t.created);
+  const age=a===0?"今日入れた":a+"日前に入れた";
+  let acts="";
+  if(isToday) acts=t.done?"":`<button class="mini" data-act="back" data-id="${t.id}">箱に戻す</button>`;
+  else acts=(full?"":`<button class="mini pick" data-act="pick" data-id="${t.id}">今日やる</button>`)+`<button class="mini" data-act="drop" data-id="${t.id}">手放す</button>`;
+  return `<li class="task${t.done?" done":""}">${isToday?`<button class="check" data-act="done" data-id="${t.id}" aria-label="完了にする"></button>`:""}<div class="t">${esc(t.text)}<span class="age${a>=7?" old":""}">${age}</span></div>${acts}</li>`;
+}
+function setLimit(d){S.limit=Math.min(10,Math.max(1,S.limit+d));save();renderAll();}
+$("l-minus").addEventListener("click",()=>setLimit(-1));
+$("l-plus").addEventListener("click",()=>setLimit(1));
+function addTask(text){S.tasks.unshift({id:uid(),text,created:Date.now(),done:false,today:false});save();renderAll();}
+
+$("f-inbox").addEventListener("submit",e=>{e.preventDefault();const v=$("in-inbox").value.trim();if(!v)return;addTask(v);$("in-inbox").value="";toast("ポイ箱に入れました");});
+document.addEventListener("click",e=>{
+  const b=e.target.closest("[data-act]");if(!b)return;
+  const t=S.tasks.find(x=>x.id===b.dataset.id);if(!t)return;
+  const a=b.dataset.act;
+  const prev=JSON.stringify(S);
+  const undo=()=>{S=norm(JSON.parse(prev));save();renderAll();toast("元に戻しました");};
+  if(a==="done"){
+    t.done=!t.done;t.doneAt=t.done?Date.now():null;
+    if(t.done){
+      toast(nextPraise(),undo);
+      const td=S.tasks.filter(x=>x.today&&x.todayKey===todayKey());
+      if(t.today&&td.length&&td.every(x=>x.done)){
+        const total=S.tasks.filter(x=>x.done).length;
+        celebrate({big:true,title:"はなまる！",
+          msg:`今日決めた${td.length}つ、全部やりきりました！`,
+          sub:pick(["決めたことを、決めた日に終わらせた。これは簡単なことじゃありません。本当にすごい！","思い出したことに流されず、決めたことをやりきった。最高です！","やると決めて、ちゃんとやった。今日の自分を思いきり誇ってください！"])+` これまでに終えたタスクは${total}個です。`});
+      }
+    }
+  }
+  if(a==="undo"){t.done=false;t.doneAt=null;toast("戻しました");}
+  if(a==="pick"){t.today=true;t.todayKey=todayKey();}
+  if(a==="back"){t.today=false;}
+  if(a==="drop"){S.tasks=S.tasks.filter(x=>x.id!==t.id);toast("手放しました",undo);}
+  save();renderAll();
+});
+
+
+/* ---------- ねぎらい ---------- */
+$("f-win").addEventListener("submit",e=>{e.preventDefault();const v=$("in-win").value.trim();if(!v)return;S.wins.unshift({date:todayKey(),text:v});$("in-win").value="";save();renderAll();toast("ちゃんと残しました");});
+function renderWin(){
+  $("st-done").textContent=S.tasks.filter(t=>t.done).length;
+  const row=w=>`<div class="win"><time>${md(w.date)}</time><span>${esc(w.text)}</span></div>`;
+  const wins=S.wins.slice().sort((a,b)=>a.date<b.date?1:-1).slice(0,40);
+  $("win-list").innerHTML=wins.length?wins.map(row).join(""):'<p class="empty">寝る前に1行、上の欄から残してみましょう。</p>';
+  const done=S.tasks.filter(t=>t.done&&t.doneAt).sort((a,b)=>b.doneAt-a.doneAt).slice(0,40).map(t=>({date:dkey(new Date(t.doneAt)),text:t.text}));
+  $("done-log").innerHTML=done.length?done.map(row).join(""):'<p class="empty">「今日やる」でチェックしたタスクがここに並びます。</p>';
+}
+
+/* ---------- ほめる ---------- */
+const PRAISE=["ひとつ前に進みました。ちゃんと動けています","後回しにしなかったの、えらいです","できた！この調子です","また一つ片づきました。頭が軽くなりましたね","小さな一歩も、ちゃんと前進です","やると決めて、やった。かっこいいです"];
+function pick(a){return a[Math.floor(Math.random()*a.length)];}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+/* ほめ言葉もくじ袋方式：6種類を全部言い終えるまで同じ言葉は出ない */
+function nextPraise(){
+  let bag=(S.prBag||[]).filter(i=>i<PRAISE.length);
+  if(!bag.length)bag=shuffle(PRAISE.map((_,i)=>i));
+  const i=bag.shift();S.prBag=bag;return PRAISE[i];
+}
+const RM=()=>window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+const RAINBOW=["#E8473F","#F28C28","#F2C230","#4DB861","#3A9AD9","#4B5BC7","#8E57C2"];
+/* mode: burst=はじける / fall=上から舞う / rise=下から上がる / firework=打ち上げ / bubble=シャボン玉 */
+const THEMES=[
+  {id:"kami",name:"紙吹雪",mode:"burst",hm:"#B23E6E"},
+  {id:"hana",name:"花吹雪",mode:"fall",items:["🌸","🌼","🌷","🌹","🌺","💐","🌻"],hm:"#D9487A"},
+  {id:"star",name:"星のシャワー",mode:"fall",items:["⭐","🌟","✨","💫"],hm:"#D99A12"},
+  {id:"hanabi",name:"打ち上げ花火",mode:"firework",hm:"#E2572B"},
+  {id:"awa",name:"シャボン玉",mode:"bubble",hm:"#3C9AD6"},
+  {id:"fusen",name:"風船",mode:"rise",items:["🎈"],size:36,hm:"#E2572B"},
+  {id:"shogatsu",name:"お正月",mode:"burst",items:["🎍","💮","🎴","🪁"],colors:["#D7263D","#FFFFFF","#D4A017"],from:101,to:115,hm:"#D7263D"},
+  {id:"setsubun",name:"節分の豆まき",mode:"burst",items:["👹","🫘","🫘","🫘"],from:125,to:204,hm:"#C0392B"},
+  {id:"valentine",name:"バレンタインのチョコ",mode:"fall",items:["🍫"],colors:["#6B3E26","#D4A017","#C0392B"],from:205,to:214,hm:"#8B4A2B"},
+  {id:"hina",name:"ひなまつり",mode:"fall",items:["🎎","🌸","🍡","🌸"],petals:true,from:220,to:303,hm:"#E07A9A"},
+  {id:"sakura",name:"桜",mode:"fall",items:["🌸"],petals:true,from:320,to:420,hm:"#E07A9A"},
+  {id:"kodomo",name:"こどもの日",mode:"fall",items:["🎏","🎏","🍃","🌿"],size:34,from:425,to:505,hm:"#2F7DC0"},
+  {id:"tsuyu",name:"梅雨のあじさい",mode:"fall",items:["🪻","☔","🐸","💧","💧"],from:601,to:705,hm:"#6A5ACD"},
+  {id:"tanabata",name:"七夕",mode:"fall",items:["🎋","⭐","✨","🌟"],from:701,to:707,hm:"#D99A12"},
+  {id:"natsu",name:"夏",mode:"burst",items:["🌻","🍉","🎐","🌻"],from:715,to:831,hm:"#E39B12"},
+  {id:"natsubi",name:"夏の花火大会",mode:"firework",from:715,to:831,hm:"#E2572B"},
+  {id:"tsukimi",name:"お月見",mode:"rise",items:["🌕","🐇","🍡","🌾"],from:901,to:930,hm:"#D4A017"},
+  {id:"halloween",name:"ハロウィン",mode:"burst",items:["🎃","🦇","👻","🍬","🍭","🕸️","🎃"],colors:["#F28C28","#6B3FA0","#222222"],from:1001,to:1031,hm:"#F28C28"},
+  {id:"momiji",name:"紅葉",mode:"fall",items:["🍁","🍂","🍁"],from:1101,to:1130,hm:"#C8482B"},
+  {id:"xmas",name:"クリスマス",mode:"fall",items:["🎄","🎁","⭐","❄️","🔔"],snow:true,from:1201,to:1225,hm:"#2F8F4E"},
+  {id:"yuki",name:"雪",mode:"fall",items:["❄️","☃️"],snow:true,from:1201,to:228,hm:"#3A9AD9"},
+  {id:"niji",name:"大当たり！虹と金のはなまる",mode:"burst",rare:true,rainbow:true,items:["🌈","✨","🌟"],colors:["#D4A017","#F2C230","#FFE08A"],hm:"#D4A017"}
+];
+function inSeason(th,d){
+  if(!th.from)return false;
+  const v=(d.getMonth()+1)*100+d.getDate();
+  return th.from<=th.to?(v>=th.from&&v<=th.to):(v>=th.from||v<=th.to);
+}
+function chooseTheme(){
+  /* 20回に1回くらい大当たり */
+  if(Math.random()<0.05)return THEMES.find(t=>t.rare);
+  /* くじ袋方式：今使える演出を1回ずつ全部出し切ってから、また袋に入れ直す */
+  const d=new Date();
+  const valid=THEMES.filter(t=>!t.rare&&(!t.from||inSeason(t,d))).map(t=>t.id);
+  let bag=(S.fxBag||[]).filter(id=>valid.includes(id));
+  if(!bag.length){
+    bag=shuffle(valid.slice());
+    if(bag.length>1&&bag[0]===S.fxLast)bag.push(bag.shift());
+  }
+  const id=bag.shift();
+  S.fxBag=bag;S.fxLast=id;save();
+  return THEMES.find(t=>t.id===id);
+}
+
+let P=[],raf=0,tEnd=0,t0=0,curTheme=null;
+const W=()=>innerWidth,H=()=>innerHeight;
+function sizeCanvas(){const c=$("confetti"),d=window.devicePixelRatio||1;c.width=W()*d;c.height=H()*d;c.getContext("2d").setTransform(d,0,0,d,0,0);}
+function palette(th){
+  if(th.colors)return th.colors;
+  const cs=getComputedStyle(document.documentElement);
+  return ["--accent","--feel","--ok"].map(v=>cs.getPropertyValue(v).trim()).concat(["#F2B632","#F08A3E","#5BB8E8"]);
+}
+function glyph(th){return th.items&&Math.random()<(th.colors||th.mode!=="burst"?0.75:0.6)?pick(th.items):null;}
+function spawn(th,scale){
+  const cols=palette(th),w=W(),h=H(),big=scale>0.8;
+  const mk=o=>P.push(Object.assign({r:Math.random()*6,vr:(Math.random()-.5)*.25,ph:Math.random()*6.28,c:pick(cols),size:(th.size||26)*(0.75+Math.random()*.5),w:6+Math.random()*7,h:4+Math.random()*5,delay:0,grav:0,dx:1,dy:1,amp:0},o));
+  const n=k=>Math.max(1,Math.round(k*scale));
+  if(th.mode==="firework"){
+    const fc=()=>pick(["#FF5A5F","#FFC93C","#5BC0EB","#9BE564","#FF9F1C","#FFFFFF","#C38BFF"]);
+    for(let k=0;k<(big?2:1);k++)mk({type:"rocket",x:w*(.25+k*.5),y:h*(.07+Math.random()*.08),vy:-1,vx:0,delay:k*200,c:fc()});
+    for(let k=0;k<(big?6:2);k++)mk({type:"rocket",x:w*(.12+Math.random()*.76),y:h+10,vy:-(20+Math.random()*4),vx:(Math.random()-.5)*1.5,delay:350+k*380,c:fc()});
+    tEnd=performance.now()+4500;return;
+  }
+  if(th.mode==="burst"){
+    /* 最初の版と同じ強さの紙吹雪 */
+    const shots=big?[[w/2,h*.55,0,140],[w*.15,h*.8,450,80],[w*.85,h*.8,800,80],[w/2,h*.7,1300,120]]:[[w/2,h*.6,0,90]];
+    shots.forEach(([ox,oy,dl,cnt])=>{for(let k=0;k<cnt;k++){const a=-Math.PI/2+(Math.random()-.5)*1.6,sp=6+Math.random()*12;
+      const g=th.items&&Math.random()<(th.colors?.6:.5)?pick(th.items):null;
+      mk({type:g?"emoji":(Math.random()<.3?"dot":"rect"),g,x:ox,y:oy,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,vr:(Math.random()-.5)*.35,delay:dl,grav:.28,dx:.985,dy:.99});}});
+    tEnd=performance.now()+5200;return;
+  }
+  if(th.mode==="fall"){
+    /* 上からふわっと降ってくる */
+    for(let k=0;k<n(110);k++){const g=th.items?pick(th.items):null;
+      const kind=th.petals&&Math.random()<.55?"petal":th.snow&&Math.random()<.5?"snow":g?"emoji":"rect";
+      mk({type:kind,g,x:Math.random()*w,y:-30-Math.random()*h*.7,vy:3.2+Math.random()*2.8,amp:.6+Math.random()*1.4,
+        c:kind==="petal"?pick(["#F7B6C8","#F3A0B8","#FBD3DF"]):kind==="snow"?"#FFFFFF":pick(cols),
+        size:kind==="snow"?3+Math.random()*4:(th.size||26)*(0.6+Math.random()*.6)});}
+  }
+  if(th.mode==="rise"){
+    for(let k=0;k<n(55);k++)mk({type:"emoji",g:pick(th.items),x:Math.random()*w,y:h+30+Math.random()*h*.6,vy:-(3.2+Math.random()*2.8),amp:.8+Math.random()*1.2,vr:(Math.random()-.5)*.04,r:(Math.random()-.5)*.4});
+  }
+  if(th.mode==="bubble"){
+    for(let k=0;k<n(55);k++)mk({type:"bubble",x:Math.random()*w,y:h+20+Math.random()*h*.6,vy:-(3+Math.random()*2.6),amp:.8+Math.random()*1.5,size:8+Math.random()*20,c:pick(["#8FD3F4","#B8F2C9","#FFE08A","#C5B8F7","#9AD0F5"])});
+  }
+  tEnd=performance.now()+6000;
+}
+function step(t){
+  const x=$("confetti").getContext("2d"),w=W(),h=H();x.clearRect(0,0,w,h);
+  if(curTheme&&curTheme.rainbow){
+    const a=Math.min(1,(t-t0)/900)*0.55*Math.min(1,(tEnd-t)/1200);
+    x.save();x.globalAlpha=Math.max(0,a);x.lineWidth=Math.max(8,w/40);
+    RAINBOW.forEach((c,i)=>{x.strokeStyle=c;x.beginPath();x.arc(w/2,h*0.78,w*0.62-i*x.lineWidth,Math.PI,0);x.stroke();});
+    x.restore();
+  }
+  const add=[];
+  P.forEach(p=>{
+    if(p.delay>0){p.delay-=16;return;}
+    p.age=(p.age||0)+1;
+    if(p.type==="rocket"){p.x+=p.vx;p.y+=p.vy;p.vy+=.7;
+      x.fillStyle=p.c;x.beginPath();x.arc(p.x,p.y,2.5,0,6.28);x.fill();
+      if(p.vy>-1.2){p.dead=true;const m=90;for(let i=0;i<m;i++){const a=i/m*6.28,sp=4+Math.random()*7;add.push({type:"spark",x:p.x,y:p.y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:1,c:Math.random()<.2?"#FFFFFF":p.c,delay:0});}}
+      return;}
+    if(p.type==="spark"){p.vx*=.95;p.vy=p.vy*.95+.09;p.x+=p.vx;p.y+=p.vy;p.life-=.021;
+      x.globalAlpha=Math.max(0,p.life);x.fillStyle=p.c;x.beginPath();x.arc(p.x,p.y,2.6,0,6.28);x.fill();x.globalAlpha=1;
+      if(p.life<=0)p.dead=true;return;}
+    p.vy+=p.grav;p.vx*=p.dx;p.vy*=p.dy;
+    p.x+=(p.vx||0)+(p.amp?Math.sin(p.age/22+p.ph)*p.amp:0);
+    p.y+=p.vy;p.r+=p.vr;
+    x.save();x.translate(p.x,p.y);x.rotate(p.r);
+    if(p.type==="emoji"){x.font=`${p.size}px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif`;x.textAlign="center";x.textBaseline="middle";x.fillText(p.g,0,0);}
+    else if(p.type==="petal"){x.scale(1,Math.abs(Math.cos(p.age/14+p.ph))*.7+.3);x.fillStyle=p.c;x.beginPath();x.ellipse(0,0,9,5.5,0,0,6.28);x.fill();}
+    else if(p.type==="snow"){x.fillStyle=p.c;x.globalAlpha=.9;x.beginPath();x.arc(0,0,p.size,0,6.28);x.fill();}
+    else if(p.type==="bubble"){x.rotate(-p.r);x.strokeStyle=p.c;x.lineWidth=2;x.globalAlpha=.85;x.beginPath();x.arc(0,0,p.size,0,6.28);x.stroke();x.fillStyle=p.c;x.globalAlpha=.18;x.fill();x.globalAlpha=.9;x.fillStyle="#FFFFFF";x.beginPath();x.arc(-p.size*.35,-p.size*.35,p.size*.18,0,6.28);x.fill();}
+    else if(p.type==="dot"){x.fillStyle=p.c;x.beginPath();x.arc(0,0,p.h/1.6,0,6.28);x.fill();}
+    else{x.fillStyle=p.c;x.fillRect(-p.w/2,-p.h/2,p.w,p.h*Math.abs(Math.cos(p.r*2)));}
+    x.restore();
+    if((p.vy>=0&&p.y>h+60)||(p.vy<0&&!p.grav&&p.y<-60))p.dead=true;
+  });
+  P=P.filter(p=>!p.dead).concat(add);
+  if(t<tEnd&&!$("cele").hidden&&(P.length||curTheme&&curTheme.rainbow))raf=requestAnimationFrame(step);
+  else{x.clearRect(0,0,w,h);P=[];raf=0;}
+}
+function hanamaruPath(){
+  let d="";const cx=60,cy=60;
+  for(let i=0;i<=240;i++){const th=i/240*Math.PI*6,r=5+i/240*29;d+=(i?"L":"M")+(cx+r*Math.cos(th)).toFixed(1)+" "+(cy+r*Math.sin(th)).toFixed(1);}
+  for(let i=0;i<=300;i++){const th=i/300*Math.PI*2,r=46+8*Math.abs(Math.sin(th*6));d+="L"+(cx+r*Math.cos(th)).toFixed(1)+" "+(cy+r*Math.sin(th)).toFixed(1);}
+  return d;
+}
+function celebrate(o){
+  const th=o.theme?THEMES.find(t=>t.id===o.theme):chooseTheme();
+  curTheme=th;
+  $("cele-theme").textContent="今日の演出："+th.name;
+  $("cele-big").textContent=o.title;$("cele-msg").textContent=o.msg;$("cele-sub").textContent=o.sub||"";
+  $("cele-big").style.color=th.hm;
+  const hm=$("hanamaru");hm.hidden=!o.big;
+  if(o.big){const p=$("hm-path");p.setAttribute("d",hanamaruPath());p.style.stroke=th.hm;
+    try{p.style.setProperty("--len",Math.ceil(p.getTotalLength()))}catch(e){}
+    p.style.animation="none";void p.getBoundingClientRect();p.style.animation="";}
+  const card=document.querySelector(".cele-card");card.style.animation="none";void card.offsetWidth;card.style.animation="";
+  $("cele").hidden=false;sizeCanvas();
+  if(!RM()){P=[];spawn(th,o.big?1:0.5);t0=performance.now();if(!raf)raf=requestAnimationFrame(step);}
+  $("cele-close").focus();
+}
+function closeCele(){$("cele").hidden=true;}
+$("cele-close").addEventListener("click",closeCele);
+$("cele").addEventListener("click",e=>{if(e.target.id==="cele")closeCele();});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("cele").hidden)closeCele();});
+
+
+function renderAll(){renderNow();renderWin();renderBackup();}
+
+/* tabs */
+document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>{
+  document.querySelectorAll("nav button").forEach(x=>x.setAttribute("aria-selected",x===b));
+  document.querySelectorAll(".page").forEach(p=>p.hidden=p.id!==b.dataset.p);
+  window.scrollTo(0,0);
+  try{localStorage.setItem(LSK+"-tab",b.dataset.p)}catch(e){}
+}));
+try{const t=localStorage.getItem(LSK+"-tab");if(t){const b=document.querySelector(`nav button[data-p="${t}"]`);b&&b.click();}}catch(e){}
+
+
+/* ---------- バックアップ ---------- */
+function renderBackup(){
+  const has=S.tasks.length||S.wins.length;
+  $("bk-last").textContent=S.backupAt?"前回 "+md(dkey(new Date(S.backupAt))):"";
+  const w=$("bk-warn"),gap=S.backupAt?daysAgo(S.backupAt):null;
+  if(has&&(gap===null||gap>=14)){w.hidden=false;w.textContent=gap===null?"まだ一度もバックアップしていません。記録を守るために、一度「書き出す」を押しておきましょう。":`前回のバックアップから${gap}日たちました。そろそろ書き出しておくと安心です。`;}
+  else w.hidden=true;
+}
+/* Claudeのプレビューでは専用の保存窓口、GitHubなど普通のサイトではブラウザのダウンロード */
+const dlP=window.claude&&window.claude.use?window.claude.use("downloads").catch(()=>null):Promise.resolve(null);
+$("bk-out").addEventListener("click",async()=>{
+  const name="dandori-backup-"+todayKey()+".json";
+  const snap=Object.assign({},S,{backupAt:Date.now()});
+  const text=JSON.stringify({app:"dandori",version:1,savedAt:new Date().toISOString(),data:snap},null,1);
+  const dl=await dlP;
+  if(dl){
+    try{await dl.save({filename:name,data:text});}
+    catch(err){toast(err&&err.code==="declined"?"書き出しをやめました":"ここでは書き出せませんでした");return;}
+  }else{
+    const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([text],{type:"application/json"}));a.download=name;
+    document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+  }
+  S.backupAt=snap.backupAt;save();renderAll();toast("バックアップを書き出しました");
+});
+$("bk-in").addEventListener("click",()=>$("bk-file").click());
+$("bk-file").addEventListener("change",async e=>{
+  const f=e.target.files[0];e.target.value="";if(!f)return;
+  try{
+    const j=JSON.parse(await f.text());
+    const d=j&&j.app==="dandori"?j.data:j;
+    if(!d||!Array.isArray(d.tasks))throw 0;
+    const prev=JSON.stringify(S);
+    S=norm(d);save();renderAll();
+    toast("バックアップから戻しました",()=>{S=norm(JSON.parse(prev));save();renderAll();toast("元に戻しました");});
+  }catch(err){toast("このファイルは読み込めませんでした");}
+});
+S=norm(lsRead());renderAll();
+
+/* ブラウザに「この記録は消さないで」とお願いする */
+(async()=>{try{
+  if(navigator.storage&&navigator.storage.persist){
+    const ok=(await navigator.storage.persisted())||(await navigator.storage.persist());
+    if(ok)$("persist").textContent="この端末では、消えにくい保存になっています。";
+  }}catch(e){}})();
+
+setInterval(()=>{const k=todayKey();if(k!==renderAll._k){renderAll._k=k;renderAll();}},60000);
+})();
+</script>
+
+</body></html>
