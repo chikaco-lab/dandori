@@ -1,4 +1,4 @@
-<!doctype html><html lang="ja"><head><meta charset=utf8><meta name="description" content="タスク管理が苦手な人のための、スマホで使える段取り帳。思いついたら放り込むだけ、今日やるのは3つだけ。"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html><html lang="ja"><head><meta charset=utf8><meta name="description" content="タスク管理が苦手な人のための、スマホで使える段取り帳。やることを思いついたらメモ、今日できる分だけ約束して、終わったらはなまる。「できた」が積み上がる。無料・登録なし。"><meta property="og:type" content="website"><meta property="og:site_name" content="段取り帳"><meta property="og:title" content="段取り帳｜タスク管理が苦手な人のための"><meta property="og:description" content="タスク管理が苦手な人のための、スマホで使える段取り帳。やることを思いついたらメモ、今日できる分だけ約束して、終わったらはなまる。「できた」が積み上がる。無料・登録なし。"><meta property="og:url" content="https://chikaco-lab.github.io/dandori/"><meta property="og:image" content="https://chikaco-lab.github.io/dandori/ogp.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="段取り帳 やることを思いついたらメモ、今日やるのは3つだけ、終わったらはなまる"><meta property="og:locale" content="ja_JP"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="段取り帳｜タスク管理が苦手な人のための"><meta name="twitter:description" content="タスク管理が苦手な人のための、スマホで使える段取り帳。やることを思いついたらメモ、今日できる分だけ約束して、終わったらはなまる。「できた」が積み上がる。無料・登録なし。"><meta name="twitter:image" content="https://chikaco-lab.github.io/dandori/ogp.png"><link rel="icon" type="image/png" href="icon-512.png"><link rel="apple-touch-icon" href="icon-180.png"><meta name="apple-mobile-web-app-title" content="段取り帳"><meta name="theme-color" content="#EEF1F5"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>段取り帳</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Zen+Maru+Gothic:wght@500;700&display=swap">
 <style>
@@ -188,7 +188,7 @@ nav button[aria-selected=true] b{border-bottom:2px solid var(--accent)}
       <button type="button" class="mini" id="first-x" aria-label="閉じる">×</button>
     </div>
     <section>
-      <h2>思いついたら、ここへポイ<small>考えずに入れるだけ</small></h2>
+      <h2>やることを、思いついたらメモ<small>考えずに書くだけ</small></h2>
       <form class="row" id="f-inbox">
         <input type="text" id="in-inbox" placeholder="例：歯医者の予約をとる" autocomplete="off">
         <button class="btn" type="submit">入れる</button>
@@ -229,7 +229,7 @@ nav button[aria-selected=true] b{border-bottom:2px solid var(--accent)}
     <section class="g-step">
       <div class="g-num">1</div>
       <div class="g-body">
-        <h3>思いついたら「ポイ」</h3>
+        <h3>やることを、思いついたらメモ</h3>
         <p>「いま」の画面のいちばん上に、思いついたことを書いて<span class="g-chip on">入れる</span>を押します。</p>
         <p class="g-note">きれいな文章でなくてOK。「歯医者」「牛乳」だけでも大丈夫です。入れたものは下の「ポイ箱」にたまります。</p>
       </div>
@@ -307,16 +307,32 @@ nav button[aria-selected=true] b{border-bottom:2px solid var(--accent)}
           <span>Android:右上の<b class="g-ico">︙</b>→「ホーム画面に追加」</span>
           <span class="g-sub">アプリのように使えて、記録も消えにくくなります。</span></li>
         <li><b>ときどき「書き出す」でバックアップ</b>
-          <span>「ねぎらい」の画面のいちばん下にあります。機種変更のときも、このファイルを「読み込む」で元に戻せます。</span></li>
+          <span>このすぐ下のボタンでできます。機種変更のときも、このファイルを「読み込む」で元に戻せます。</span></li>
         <li><b>LINEの中や、シークレットモードで開かない</b>
           <span>そこで書いた記録は、消えたり別々になったりします。</span></li>
       </ol>
+    </section>
+
+    <section class="panel" id="backup">
+      <h2>記録のバックアップ<small id="bk-last"></small></h2>
+      <p class="hint">「書き出す」を押すと、記録が1つのファイルとして保存されます。消えてしまったときや機種変更のときは、そのファイルを「読み込む」で選べば元に戻ります。</p>
+      <p class="stale" id="bk-warn" hidden></p>
+      <div class="row">
+        <button class="btn" type="button" id="bk-out" style="flex:1">書き出す</button>
+        <button class="btn ghost" type="button" id="bk-in" style="flex:1">読み込む</button>
+        <input type="file" id="bk-file" accept=".json,application/json" hidden>
+      </div>
+      <p class="sync" style="margin:0">記録はこの端末のブラウザの中だけに保存されます。ほかの人には見えません。<span id="persist"></span></p>
     </section>
     <p class="sync">段取り帳は無料で使えます。登録もいりません。</p>
   </div>
 
   <!-- PAGE 3: ねぎらい -->
   <div id="p-win" class="page" hidden>
+    <div class="g-first" id="bk-nudge" hidden>
+      <span id="bk-nudge-t"></span>
+      <button type="button" class="mini pick" id="bk-go">バックアップへ</button>
+    </div>
     <section class="panel">
       <h2>今日の自分をねぎらう<small>寝る前に1行</small></h2>
       <p class="hint">人からの「すごいね」を待たなくていいように、自分で記録を残します。小さいことほど書く価値があります。</p>
@@ -355,17 +371,6 @@ nav button[aria-selected=true] b{border-bottom:2px solid var(--accent)}
       <h2>終えたタスク<small>ポイ箱から自動で記録</small></h2>
       <div class="panel" id="done-log"></div>
     </section>
-    <section class="panel" style="margin-top:18px">
-      <h2>記録のバックアップ<small id="bk-last"></small></h2>
-      <p class="hint">記録はこのスマホ(ブラウザ)の中だけに保存されています。ときどき「書き出す」でファイルに保存しておくと、消えてしまったときや機種変更のときに「読み込む」で元に戻せます。</p>
-      <p class="stale" id="bk-warn" hidden></p>
-      <div class="row">
-        <button class="btn" type="button" id="bk-out" style="flex:1">書き出す</button>
-        <button class="btn ghost" type="button" id="bk-in" style="flex:1">読み込む</button>
-        <input type="file" id="bk-file" accept=".json,application/json" hidden>
-      </div>
-    </section>
-    <p class="sync">記録はこの端末のブラウザの中だけに保存されます。ほかの人には見えません。<span id="persist"></span></p>
   </div>
 </div>
 
@@ -720,7 +725,15 @@ function renderBackup(){
   const w=$("bk-warn"),gap=S.backupAt?daysAgo(S.backupAt):null;
   if(has&&(gap===null||gap>=14)){w.hidden=false;w.textContent=gap===null?"まだ一度もバックアップしていません。記録を守るために、一度「書き出す」を押しておきましょう。":`前回のバックアップから${gap}日たちました。そろそろ書き出しておくと安心です。`;}
   else w.hidden=true;
+  const nd=$("bk-nudge");
+  if(has&&(gap===null?daysAgo(Math.min(Date.now(),...S.tasks.map(t=>t.created||Date.now()),...S.wins.map(w=>new Date(w.date+"T12:00:00").getTime())))>=3:gap>=14)){
+    nd.hidden=false;$("bk-nudge-t").textContent=gap===null?"記録を守るために、一度バックアップしておきましょう。":`前回のバックアップから${gap}日たちました。`;
+  }else nd.hidden=true;
 }
+$("bk-go").addEventListener("click",()=>{
+  document.querySelector('nav button[data-p="p-help"]').click();
+  setTimeout(()=>$("backup").scrollIntoView({behavior:RM()?"auto":"smooth",block:"start"}),50);
+});
 /* Claudeのプレビューでは専用の保存窓口、GitHubなど普通のサイトではブラウザのダウンロード */
 const dlP=window.claude&&window.claude.use?window.claude.use("downloads").catch(()=>null):Promise.resolve(null);
 $("bk-out").addEventListener("click",async()=>{
