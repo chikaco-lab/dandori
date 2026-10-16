@@ -81,8 +81,70 @@ input[type=range]{width:100%;accent-color:var(--feel)}
 .win:last-child{border-bottom:none}
 .win time{color:var(--sub);font-size:12px;flex:none;font-variant-numeric:tabular-nums;padding-top:2px}
 .streak{font-family:var(--display);font-size:28px;color:var(--ok);font-variant-numeric:tabular-nums;line-height:1}
+/* calendar */
+.cal-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:4px}
+.cal-head b{font-family:var(--display);font-size:16px;font-variant-numeric:tabular-nums}
+.cal-nav{width:36px;height:36px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-size:20px;font-weight:700;padding:0;line-height:1}
+.cal-nav:disabled{opacity:.35;cursor:default}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal .wd{font-size:11px;color:var(--sub);text-align:center;padding:2px 0}
+.cal .wd.sun{color:var(--feel)}.cal .wd.sat{color:var(--accent)}
+.cd{aspect-ratio:1/1.1;min-width:0;background:var(--bg);color:var(--ink);border:1px solid transparent;border-radius:9px;padding:3px 0 0;display:flex;flex-direction:column;align-items:center;gap:1px;font-variant-numeric:tabular-nums}
+.cd .n{font-size:12px;color:var(--sub);line-height:1.2}
+:root{--hm-gold:#C9960C;--hm-red:#D7263D;--hm-blue:#2F7DC0}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--hm-gold:#F2C230;--hm-red:#FF6B7A;--hm-blue:#6DB3F2}}
+:root[data-theme="dark"]{--hm-gold:#F2C230;--hm-red:#FF6B7A;--hm-blue:#6DB3F2}
+.cd svg{width:78%;max-width:34px;height:auto;margin-top:-1px}
+.hmp{fill:none;stroke:var(--hm);stroke-width:6.5;stroke-linecap:round;stroke-linejoin:round}
+.cd.has{background:var(--paper);border-color:var(--line)}
+.cal-legend{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12px;color:var(--sub)}
+.cal-legend span{display:flex;align-items:center;gap:4px}
+.hm-mini{width:18px;height:18px}
+.cd.today{border-color:var(--accent)}
+.cd.sel{outline:2px solid var(--feel);outline-offset:1px}
+.cd.future{opacity:.4}
+.cd.blank{background:transparent;pointer-events:none}
+.cal-day{border-top:1px solid var(--line);padding-top:10px;display:flex;flex-direction:column;gap:6px}
+.cal-day h3{font-family:var(--display);font-size:15px;margin:0}
+.cal-day .k{font-size:11px;font-weight:700;border-radius:6px;padding:1px 6px;flex:none;margin-top:2px}
+.cal-day .k.t{background:var(--ok-soft);color:var(--ok)}
+.cal-day .k.w{background:var(--feel-soft);color:var(--feel)}
+.cal-day .it{display:flex;gap:8px;font-size:14px;align-items:flex-start;word-break:break-word}
+/* トリセツ */
+#p-help{display:flex;flex-direction:column;gap:14px}
+#p-help[hidden]{display:none}
+.g-hero p{margin:0;font-size:14px}
+.g-step{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;gap:12px;flex-direction:row}
+.g-num{flex:none;width:34px;height:34px;border-radius:50%;background:var(--accent);color:var(--paper);font-family:var(--display);font-weight:700;font-size:18px;display:grid;place-items:center}
+.g-num.g-plus{background:var(--feel)}
+.g-body{min-width:0;display:flex;flex-direction:column;gap:4px}
+.g-body h3{font-family:var(--display);font-size:16px;margin:4px 0 2px}
+.g-body p{margin:0;font-size:14px}
+.g-note{color:var(--sub);font-size:13px!important}
+.g-chip{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:1px 10px;margin:0 3px;vertical-align:1px}
+.g-chip.on{background:var(--accent);color:var(--paper)}
+.g-chip.pick{background:var(--accent-soft);color:var(--accent)}
+.g-circle{display:inline-block;width:16px;height:16px;border-radius:50%;border:2px solid var(--accent);vertical-align:-3px;margin:0 3px}
+.g-list{gap:8px}.g-list li{display:flex;align-items:center;gap:8px;font-size:14px}
+.g-list .hm-mini{width:26px;height:26px;flex:none}
+.g-faq{margin:0;display:flex;flex-direction:column;gap:4px}
+.g-faq dt{font-weight:700;font-size:14px;margin-top:6px}
+.g-faq dt::before{content:"Q. ";color:var(--accent)}
+.g-faq dd{margin:0;font-size:13px;color:var(--sub)}
+.g-ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:10px;font-size:14px}
+.g-ol li span{display:block;font-size:13px;color:var(--sub)}
+.g-ol .g-sub{color:var(--ok)}
+.g-ico{display:inline;font-weight:700;color:var(--ink)}
+.g-first{background:var(--accent-soft);color:var(--accent);border-radius:12px;padding:8px 8px 8px 12px;display:flex;align-items:center;gap:6px;font-size:13px;margin-bottom:14px}
+.g-first span{flex:1}
+.g-caution{font-size:12px;color:var(--sub);margin:-4px 0 0}
+.g-ng{border-color:color-mix(in srgb,var(--feel) 45%,var(--line))}
+.g-nglist{gap:4px;font-size:14px}
+.g-nglist li{padding-left:22px;position:relative}
+.g-nglist li::before{content:"✕";position:absolute;left:2px;color:var(--feel);font-weight:700}
+.g-h3{font-family:var(--display);font-size:14px;margin:6px 0 0}
 /* tab bar */
-nav{position:fixed;left:0;right:0;bottom:0;background:var(--paper);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(2,1fr);padding-bottom:env(safe-area-inset-bottom,0px)}
+nav{position:fixed;left:0;right:0;bottom:0;background:var(--paper);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(3,1fr);padding-bottom:env(safe-area-inset-bottom,0px)}
 nav button{background:transparent;color:var(--sub);padding:12px 4px 10px;font-size:13px;border-radius:0;display:flex;flex-direction:column;align-items:center;gap:2px}
 nav button b{font-family:var(--display);font-size:15px}
 nav button[aria-selected=true]{color:var(--accent)}
@@ -120,12 +182,18 @@ nav button[aria-selected=true] b{border-bottom:2px solid var(--accent)}
 
   <!-- PAGE 1: いま -->
   <div id="p-now" class="page">
+    <div class="g-first" id="first" hidden>
+      <span>はじめての方へ:まずは<b>トリセツ</b>をどうぞ。1分で読めます。</span>
+      <button type="button" class="mini pick" id="first-go">読む</button>
+      <button type="button" class="mini" id="first-x" aria-label="閉じる">×</button>
+    </div>
     <section>
       <h2>思いついたら、ここへポイ<small>考えずに入れるだけ</small></h2>
       <form class="row" id="f-inbox">
         <input type="text" id="in-inbox" placeholder="例：歯医者の予約をとる" autocomplete="off">
         <button class="btn" type="submit">入れる</button>
       </form>
+      <p class="g-caution">※パスワード・カード番号・住所などは書かないでください</p>
     </section>
 
     <section class="panel" style="margin-top:18px">
@@ -151,6 +219,102 @@ nav button[aria-selected=true] b{border-bottom:2px solid var(--accent)}
     </section>
   </div>
 
+  <!-- PAGE: トリセツ -->
+  <div id="p-help" class="page" hidden>
+    <section class="panel g-hero">
+      <h2>段取り帳のトリセツ</h2>
+      <p>やることを<b>忘れないように置いておく場所</b>です。<br>がんばって管理しなくて大丈夫。使い方は、たった3つです。</p>
+    </section>
+
+    <section class="g-step">
+      <div class="g-num">1</div>
+      <div class="g-body">
+        <h3>思いついたら「ポイ」</h3>
+        <p>「いま」の画面のいちばん上に、思いついたことを書いて<span class="g-chip on">入れる</span>を押します。</p>
+        <p class="g-note">きれいな文章でなくてOK。「歯医者」「牛乳」だけでも大丈夫です。入れたものは下の「ポイ箱」にたまります。</p>
+      </div>
+    </section>
+
+    <section class="g-step">
+      <div class="g-num">2</div>
+      <div class="g-body">
+        <h3>今日やることを選ぶ</h3>
+        <p>ポイ箱の中から、今日やるものに<span class="g-chip pick">今日やる</span>を押します。最初は<b>3つまで</b>です。</p>
+        <p class="g-note">全部やろうとしないのがコツ。3つで足りない日・多い日は「今日やる数を変える」で1〜10に変えられます。</p>
+      </div>
+    </section>
+
+    <section class="g-step">
+      <div class="g-num">3</div>
+      <div class="g-body">
+        <h3>終わったら ○ を押す</h3>
+        <p>「今日やる」のタスクが終わったら、左の<span class="g-circle"></span>を押します。ほめ言葉が出ます。</p>
+        <p class="g-note">選んだものを全部終えると、大きな<b>はなまる</b>と、季節ごとのお祝いが出ます。</p>
+      </div>
+    </section>
+
+    <section class="g-step">
+      <div class="g-num g-plus">＋</div>
+      <div class="g-body">
+        <h3>寝る前に1行「ねぎらい」</h3>
+        <p>「ねぎらい」の画面で、今日の自分にひとこと書いて<span class="g-chip on">残す</span>を押します。</p>
+        <p class="g-note">「疲れていたけど洗濯物をたたんだ」「今日はよく休んだ」など、小さなことほど書く価値があります。何もできなかった日でもOKです。</p>
+      </div>
+    </section>
+
+    <section class="panel g-ng">
+      <h2>書かないでほしいこと</h2>
+      <p class="hint">段取り帳はメモ帳と同じです。鍵はかかっていません。次のものは書かないでください。</p>
+      <ul class="g-nglist">
+        <li>パスワード、暗証番号</li>
+        <li>クレジットカードや銀行口座の番号</li>
+        <li>住所、電話番号、メールアドレス</li>
+        <li>マイナンバーや保険証の番号</li>
+      </ul>
+      <h3 class="g-h3">なぜ？</h3>
+      <p class="hint">記録はこのスマホの中だけに保存され、どこにも送られません。でも、スマホを人に見られたり、なくしたり、バックアップのファイルを誰かに渡したりすると、そのまま読めてしまいます。</p>
+      <h3 class="g-h3">代わりにこう書けばOK</h3>
+      <p class="hint">「銀行のパスワード変更」「〇〇さんに電話」のように、<b>やることだけ</b>を書きましょう。番号や中身は、いつもの安全な場所で確認してください。</p>
+    </section>
+
+    <section class="panel">
+      <h2>カレンダーのはなまる</h2>
+      <p class="hint">何か記録がある日に、はなまるが付きます。数は関係ありません。1つでも10個でも同じはなまるです。</p>
+      <ul class="g-list">
+        <li><svg class="hm-mini" viewBox="0 0 120 120" aria-hidden="true" style="--hm:var(--hm-gold)"><path class="hmp"/></svg><span><b>金</b>　タスクを終えて、ねぎらいも書いた日</span></li>
+        <li><svg class="hm-mini" viewBox="0 0 120 120" aria-hidden="true" style="--hm:var(--hm-red)"><path class="hmp"/></svg><span><b>赤</b>　タスクを終えた日</span></li>
+        <li><svg class="hm-mini" viewBox="0 0 120 120" aria-hidden="true" style="--hm:var(--hm-blue)"><path class="hmp"/></svg><span><b>青</b>　ねぎらいを書いた日</span></li>
+      </ul>
+      <p class="hint">日付を押すと、その日にやったことが見られます。</p>
+    </section>
+
+    <section class="panel">
+      <h2>こんなときは</h2>
+      <dl class="g-faq">
+        <dt>まちがえて ○ を押した</dt><dd>画面の下に出る<b>「元に戻す」</b>を押します。あとからでも「最近終えたこと」の<b>「戻す」</b>で戻せます。</dd>
+        <dt>もうやらなくていいことがある</dt><dd>ポイ箱の<b>「手放す」</b>を押すと消えます。やめるのも立派な決断です。</dd>
+        <dt>今日やるのをやめたい</dt><dd><b>「箱に戻す」</b>を押すと、ポイ箱に戻ります。明日また選べば大丈夫です。</dd>
+        <dt>ピンクのお知らせが出た</dt><dd>1週間以上ポイ箱に入ったままのものがある合図です。「今日やる」か「手放す」か、どちらかに決めると頭が軽くなります。</dd>
+      </dl>
+    </section>
+
+    <section class="panel g-warn">
+      <h2>記録を消さないために</h2>
+      <p class="hint">記録は、<b>このスマホの中だけ</b>に保存されます。誰にも見られない代わりに、次の3つだけ気をつけてください。</p>
+      <ol class="g-ol">
+        <li><b>ホーム画面に追加して、そこから開く</b>
+          <span>iPhone:下の<b class="g-ico">共有ボタン(□に↑)</b>→「ホーム画面に追加」</span>
+          <span>Android:右上の<b class="g-ico">︙</b>→「ホーム画面に追加」</span>
+          <span class="g-sub">アプリのように使えて、記録も消えにくくなります。</span></li>
+        <li><b>ときどき「書き出す」でバックアップ</b>
+          <span>「ねぎらい」の画面のいちばん下にあります。機種変更のときも、このファイルを「読み込む」で元に戻せます。</span></li>
+        <li><b>LINEの中や、シークレットモードで開かない</b>
+          <span>そこで書いた記録は、消えたり別々になったりします。</span></li>
+      </ol>
+    </section>
+    <p class="sync">段取り帳は無料で使えます。登録もいりません。</p>
+  </div>
+
   <!-- PAGE 3: ねぎらい -->
   <div id="p-win" class="page" hidden>
     <section class="panel">
@@ -163,10 +327,23 @@ nav button[aria-selected=true] b{border-bottom:2px solid var(--accent)}
     </section>
 
     <section class="panel" style="margin-top:18px">
-      <h2>積み上げ</h2>
+      <h2>積み上げカレンダー<small>日付を押すと、その日の記録</small></h2>
       <div class="row" style="gap:20px;flex-wrap:wrap">
         <div><div class="streak" id="st-done">0</div><span class="hint">終えたタスク</span></div>
+        <div><div class="streak" id="st-win">0</div><span class="hint">ねぎらい</span></div>
       </div>
+      <div class="cal-head">
+        <button type="button" class="cal-nav" id="cal-prev" aria-label="前の月">‹</button>
+        <b id="cal-title"></b>
+        <button type="button" class="cal-nav" id="cal-next" aria-label="次の月">›</button>
+      </div>
+      <div class="cal" id="cal" role="grid"></div>
+      <div class="cal-legend">
+        <span><svg class="hm-mini" viewBox="0 0 120 120" aria-hidden="true" style="--hm:var(--hm-gold)"><path class="hmp"/></svg>タスクとねぎらい</span>
+        <span><svg class="hm-mini" viewBox="0 0 120 120" aria-hidden="true" style="--hm:var(--hm-red)"><path class="hmp"/></svg>タスク</span>
+        <span><svg class="hm-mini" viewBox="0 0 120 120" aria-hidden="true" style="--hm:var(--hm-blue)"><path class="hmp"/></svg>ねぎらい</span>
+      </div>
+      <div class="cal-day" id="cal-day" aria-live="polite"></div>
     </section>
 
     <section style="margin-top:18px">
@@ -195,6 +372,7 @@ nav button[aria-selected=true] b{border-bottom:2px solid var(--accent)}
 <nav role="tablist">
   <button role="tab" aria-selected="true" data-p="p-now"><b>いま</b>やること</button>
   <button role="tab" aria-selected="false" data-p="p-win"><b>ねぎらい</b>積み上げ</button>
+  <button role="tab" aria-selected="false" data-p="p-help"><b>トリセツ</b>使い方</button>
 </nav>
 <div class="toast" id="toast"></div>
 <div class="cele" id="cele" hidden>
@@ -302,8 +480,56 @@ document.addEventListener("click",e=>{
 
 /* ---------- ねぎらい ---------- */
 $("f-win").addEventListener("submit",e=>{e.preventDefault();const v=$("in-win").value.trim();if(!v)return;S.wins.unshift({date:todayKey(),text:v});$("in-win").value="";save();renderAll();toast("ちゃんと残しました");});
+let calM=null,calSel=null,HM_D="";
+/* カレンダー用のはなまる(見本8番)：うずまき2周・花びら7枚・太め */
+function miniHanamaru(){
+  const o={t:2,sr:22,p:7,br:41,dp:9};
+  let d="";const cx=60,cy=60,N=Math.round(o.t*60);
+  for(let i=0;i<=N;i++){const th=i/N*Math.PI*2*o.t,r=4+i/N*o.sr;d+=(i?"L":"M")+(cx+r*Math.cos(th)).toFixed(1)+" "+(cy+r*Math.sin(th)).toFixed(1);}
+  const a0=Math.PI*2*o.t;
+  for(let i=0;i<=260;i++){const u=i/260*Math.PI*2,th=a0+u,r=o.br+o.dp*Math.abs(Math.sin(u*o.p/2));d+="L"+(cx+r*Math.cos(th)).toFixed(1)+" "+(cy+r*Math.sin(th)).toFixed(1);}
+  return d;
+}
+function hmD(){if(!HM_D){HM_D=miniHanamaru();document.querySelectorAll(".cal-legend .hmp,.g-list .hmp").forEach(p=>p.setAttribute("d",HM_D));}return HM_D;}
+function dayLog(){
+  const m={};
+  const add=(k,o)=>{(m[k]=m[k]||[]).push(o);};
+  S.tasks.forEach(t=>{if(t.done&&t.doneAt)add(dkey(new Date(t.doneAt)),{kind:"t",text:t.text,at:t.doneAt});});
+  S.wins.forEach(w=>add(w.date,{kind:"w",text:w.text,at:0}));
+  return m;
+}
+function renderCal(){
+  hmD();
+  const log=dayLog(),now=new Date(),tk=todayKey();
+  if(!calM)calM=new Date(now.getFullYear(),now.getMonth(),1);
+  if(!calSel)calSel=tk;
+  const y=calM.getFullYear(),mo=calM.getMonth();
+  $("cal-title").textContent=y+"年"+(mo+1)+"月";
+  $("cal-next").disabled=(y>now.getFullYear()||(y===now.getFullYear()&&mo>=now.getMonth()));
+  const first=new Date(y,mo,1).getDay(),last=new Date(y,mo+1,0).getDate();
+  let h=["日","月","火","水","木","金","土"].map((w,i)=>`<div class="wd${i===0?" sun":i===6?" sat":""}">${w}</div>`).join("");
+  for(let i=0;i<first;i++)h+='<div class="cd blank"></div>';
+  for(let d=1;d<=last;d++){
+    const k=y+"-"+pad(mo+1)+"-"+pad(d),it=log[k]||[];
+    const hasT=it.some(x=>x.kind==="t"),hasW=it.some(x=>x.kind==="w");
+    const col=hasT&&hasW?"gold":hasT?"red":hasW?"blue":"";
+    const lab=hasT&&hasW?"タスクとねぎらい":hasT?"タスク":hasW?"ねぎらい":"記録なし";
+    const fut=k>tk;
+    h+=`<button type="button" class="cd${col?" has":""}${k===tk?" today":""}${k===calSel?" sel":""}${fut?" future":""}" data-day="${k}" ${fut?"disabled":""} aria-label="${mo+1}月${d}日 ${lab}"><span class="n">${d}</span>${col?`<svg viewBox="0 0 120 120" aria-hidden="true" style="--hm:var(--hm-${col})"><path class="hmp" d="${HM_D}"/></svg>`:""}</button>`;
+  }
+  $("cal").innerHTML=h;
+  const items=(log[calSel]||[]).sort((a,b)=>a.kind===b.kind?a.at-b.at:(a.kind==="t"?-1:1));
+  const sd=new Date(calSel+"T00:00:00");
+  const head=`${sd.getMonth()+1}月${sd.getDate()}日（${"日月火水木金土"[sd.getDay()]}）${calSel===tk?"・今日":""}`;
+  $("cal-day").innerHTML=`<h3>${head}</h3>`+(items.length?items.map(i=>`<div class="it"><span class="k ${i.kind}">${i.kind==="t"?"終えた":"ねぎらい"}</span><span>${esc(i.text)}</span></div>`).join(""):'<p class="empty" style="padding:0">この日の記録はまだありません。</p>');
+}
+$("cal").addEventListener("click",e=>{const b=e.target.closest("[data-day]");if(!b)return;calSel=b.dataset.day;renderCal();});
+$("cal-prev").addEventListener("click",()=>{calM=new Date(calM.getFullYear(),calM.getMonth()-1,1);renderCal();});
+$("cal-next").addEventListener("click",()=>{calM=new Date(calM.getFullYear(),calM.getMonth()+1,1);renderCal();});
 function renderWin(){
   $("st-done").textContent=S.tasks.filter(t=>t.done).length;
+  $("st-win").textContent=S.wins.length;
+  renderCal();
   const row=w=>`<div class="win"><time>${md(w.date)}</time><span>${esc(w.text)}</span></div>`;
   const wins=S.wins.slice().sort((a,b)=>a.date<b.date?1:-1).slice(0,40);
   $("win-list").innerHTML=wins.length?wins.map(row).join(""):'<p class="empty">寝る前に1行、上の欄から残してみましょう。</p>';
@@ -524,6 +750,16 @@ $("bk-file").addEventListener("change",async e=>{
   }catch(err){toast("このファイルは読み込めませんでした");}
 });
 S=norm(lsRead());renderAll();
+
+/* はじめての人にトリセツを案内 */
+(function(){
+  let seen=false;try{seen=!!localStorage.getItem(LSK+"-help")}catch(e){}
+  const mark=()=>{try{localStorage.setItem(LSK+"-help","1")}catch(e){}$("first").hidden=true;};
+  if(!seen&&!S.tasks.length&&!S.wins.length)$("first").hidden=false;
+  $("first-go").addEventListener("click",()=>{mark();document.querySelector('nav button[data-p="p-help"]').click();});
+  $("first-x").addEventListener("click",mark);
+  document.querySelector('nav button[data-p="p-help"]').addEventListener("click",mark);
+})();
 
 /* ブラウザに「この記録は消さないで」とお願いする */
 (async()=>{try{
